@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141516">
+<meta name="description" content="A welder's field guide: process fundamentals, an amperage/wire-speed/tungsten calculator by material and thickness, full reference charts, joint &amp; position diagrams, and a safety glossary.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  html,body{margin:0;}
+  [hidden]{display:none!important;}
+  img{max-width:100%;}
+  :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+</style>
+
+<title>Weld Setter</title>
+<style>
+  :root{
+    --bg:#e2e6e9;
+    --surface:#ffffff;
+    --surface-2:#dae0e3;
+    --border:#a3abb2;
+    --text:#121417;
+    --text-dim:#454d54;
+    --accent:#c8460a;
+    --accent-strong:#a83a08;
+    --accent-2:#a6690a;
+    --accent-blue:#1958b8;
+    --accent-blue-strong:#12447d;
+    --accent-teal:#0a8a76;
+    --accent-violet:#6939b3;
+    --good:#2f8f5b;
+    --good-bg:#e4f3ea;
+    --warn:#a6690a;
+    --warn-bg:#faf0dc;
+    --danger:#b23b26;
+    --danger-bg:#fbe7e2;
+    --metal-fill:#d8dbdd;
+    --metal-stroke:#9aa0a5;
+    --readout-bg:#0a0b0c;
+    --readout-text:#ff9548;
+    --readout-dim:#7d8388;
+    --led-mig:#ff9548;
+    --led-tig:#4d9eff;
+    --led-stick:#ffcc4d;
+    --led-fcaw:#34e0c4;
+    --display:'Oswald',ui-sans-serif,sans-serif;
+    --body-font:'IBM Plex Sans',ui-sans-serif,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SF Mono',monospace;
+    --radius-s:3px;
+    --radius-m:6px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#101113;
+      --surface:#1f2124;
+      --surface-2:#2b2e32;
+      --border:#4c5158;
+      --text:#f5f6f7;
+      --text-dim:#aeb4ba;
+      --accent:#ff7a33;
+      --accent-strong:#ff8f52;
+      --accent-2:#f0b429;
+      --accent-blue:#4d9eff;
+      --accent-blue-strong:#7cb8ff;
+      --accent-teal:#34e0c4;
+      --accent-violet:#b18cff;
+      --good:#57b47c;
+      --good-bg:#1c2e24;
+      --warn:#f0b429;
+      --warn-bg:#332a12;
+      --danger:#e57058;
+      --danger-bg:#3a231e;
+      --metal-fill:#34373a;
+      --metal-stroke:#575c61;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#101113;
+    --surface:#1f2124;
+    --surface-2:#2b2e32;
+    --border:#4c5158;
+    --text:#f5f6f7;
+    --text-dim:#aeb4ba;
+    --accent:#ff7a33;
+    --accent-strong:#ff8f52;
+    --accent-2:#f0b429;
+    --accent-blue:#4d9eff;
+    --accent-blue-strong:#7cb8ff;
+    --accent-teal:#34e0c4;
+    --accent-violet:#b18cff;
+    --good:#57b47c;
+    --good-bg:#1c2e24;
+    --warn:#f0b429;
+    --warn-bg:#332a12;
+    --danger:#e57058;
+    --danger-bg:#3a231e;
+    --metal-fill:#34373a;
+    --metal-stroke:#575c61;
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body-font);
+    padding-inline:16px;
+    padding-block:20px 48px;
+    line-height:1.45;
+  }
+  h1,h2,h3,h4{
+    font-family:var(--display);
+    font-weight:600;
+    letter-spacing:.01em;
+    text-wrap:balance;
+    margin:0;
+  }
+  p{margin:0;}
+  .app{max-width:980px;margin-inline:auto;display:flex;flex-direction:column;gap:18px;}
+
+  /* ---------- header ---------- */
+  .topbar{display:flex;flex-direction:column;gap:2px;padding-block:4px 2px;}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .brand-mark{
+    font-family:var(--display);
+    font-size:1.9rem;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:var(--text);
+  }
+  .brand-mark span{color:var(--accent);}
+  .tagline{color:var(--text-dim);font-size:.85rem;}
+
+  /* ---------- tabs ---------- */
+  .tabs{
+    display:flex;
+    gap:2px;
+    overflow-x:auto;
+    border-bottom:1px solid var(--border);
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .tab-btn{
+    font-family:var(--display);
+    font-size:.8rem;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    background:none;
+    border:none;
+    border-bottom:2px solid transparent;
+    padding:10px 14px;
+    cursor:pointer;
+    white-space:nowrap;
+    flex:0 0 auto;
+  }
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);}
+  .tab-btn[data-tab="guide"][aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);}
+  .tab-btn[data-tab="calc"][aria-selected="true"]{color:var(--accent-blue);border-bottom-color:var(--accent-blue);}
+  .tab-btn[data-tab="charts"][aria-selected="true"]{color:var(--accent-teal);border-bottom-color:var(--accent-teal);}
+  .tab-btn[data-tab="joints"][aria-selected="true"]{color:var(--accent-2);border-bottom-color:var(--accent-2);}
+  .tab-btn[data-tab="tungsten"][aria-selected="true"]{color:var(--accent-violet);border-bottom-color:var(--accent-violet);}
+  .tab-btn[data-tab="glossary"][aria-selected="true"]{color:var(--good);border-bottom-color:var(--good);}
+  .tab-btn:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{
+    outline:2px solid var(--accent);outline-offset:2px;
+  }
+
+  main{display:flex;flex-direction:column;gap:18px;}
+  .tabpanel{display:flex;flex-direction:column;gap:18px;}
+  #tab-guide{--section-accent:var(--accent);}
+  #tab-calc{--section-accent:var(--accent-blue);}
+  #tab-charts{--section-accent:var(--accent-teal);}
+  #tab-joints{--section-accent:var(--accent-2);}
+  #tab-tungsten{--section-accent:var(--accent-violet);}
+  #tab-glossary{--section-accent:var(--good);}
+
+  /* ---------- cards ---------- */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-m);
+    padding:16px;
+    box-shadow:0 1px 3px rgba(0,0,0,.09), 0 1px 2px rgba(0,0,0,.06);
+  }
+  .card-header{display:flex;flex-direction:column;gap:2px;margin-bottom:12px;}
+  .card-header h2{font-size:1.05rem;}
+  .card-header .sub{color:var(--text-dim);font-size:.83rem;}
+  .eyebrow{
+    font-family:var(--display);
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--section-accent, var(--accent));
+  }
+
+  /* ---------- form controls ---------- */
+  .field-row{display:flex;flex-wrap:wrap;gap:12px;}
+  .field{display:flex;flex-direction:column;gap:5px;flex:1 1 160px;min-width:0;}
+  .field label{font-size:.75rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;}
+  select, input[type="number"]{
+    font-family:var(--body-font);
+    font-size:.95rem;
+    color:var(--text);
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:var(--radius-s);
+    padding:9px 10px;
+    width:100%;
+  }
+  .segmented{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-s);overflow:hidden;}
+  .segmented button{
+    font-family:var(--mono);
+    font-size:.8rem;
+    padding:8px 12px;
+    background:var(--surface-2);
+    color:var(--text-dim);
+    border:none;
+    cursor:pointer;
+  }
+  .segmented button + button{border-left:1px solid var(--border);}
+  .segmented button[aria-pressed="true"]{background:var(--accent);color:#fff;}
+  .thickness-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .chip{
+    font-family:var(--mono);
+    font-size:.75rem;
+    padding:5px 9px;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:20px;
+    color:var(--text-dim);
+    cursor:pointer;
+  }
+  .chip:hover{color:var(--text);border-color:var(--accent);}
+
+  /* ---------- readout ---------- */
+  #resultCard{--readout-text:var(--led-mig); border-top:3px solid var(--readout-text);}
+  #resultCard.proc-mig{--readout-text:var(--led-mig);}
+  #resultCard.proc-tig{--readout-text:var(--led-tig);}
+  #resultCard.proc-stick{--readout-text:var(--led-stick);}
+  #resultCard.proc-fcaw{--readout-text:var(--led-fcaw);}
+  #resultCard .eyebrow{color:var(--readout-text);}
+  .readout{
+    background:var(--readout-bg);
+    border-radius:var(--radius-m);
+    padding:16px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px 20px;
+    box-shadow:inset 0 0 0 1px #000, inset 0 1px 14px rgba(0,0,0,.5);
+  }
+  .readout-item{display:flex;flex-direction:column;gap:3px;min-width:0;}
+  .readout-item .rl{
+    font-family:var(--display);
+    font-size:.68rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--readout-dim);
+  }
+  .readout-item .rv{
+    font-family:var(--mono);
+    font-size:1.18rem;
+    font-weight:600;
+    color:var(--readout-text);
+    line-height:1.2;
+    text-shadow:0 0 10px color-mix(in srgb, var(--readout-text) 70%, transparent);
+  }
+  .readout-item .rv small{font-size:.62em;color:var(--readout-dim);font-weight:500;}
+  .readout-note{
+    grid-column:1/-1;
+    font-size:.82rem;
+    color:#c7cbce;
+    border-top:1px solid #34373a;
+    padding-top:10px;
+    margin-top:2px;
+  }
+  .match-tag{
+    font-family:var(--mono);
+    font-size:.72rem;
+    color:var(--text-dim);
+    margin-top:-4px;
+  }
+
+  .callout{
+    border-radius:var(--radius-s);
+    padding:10px 12px;
+    font-size:.85rem;
+    display:flex;
+    gap:8px;
+  }
+  .callout.warn{background:var(--warn-bg);color:var(--warn);}
+  .callout.good{background:var(--good-bg);color:var(--good);}
+  .callout .label{font-weight:700;flex:0 0 auto;}
+
+  /* ---------- tables ---------- */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-s);}
+  table{border-collapse:collapse;width:100%;min-width:520px;font-size:.85rem;}
+  thead th{
+    font-family:var(--display);
+    font-size:.7rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    text-align:left;
+    padding:9px 10px;
+    background:var(--surface-2);
+    border-bottom:1px solid var(--border);
+    position:sticky;top:0;
+  }
+  tbody td{
+    padding:9px 10px;
+    border-bottom:1px solid var(--border);
+    font-family:var(--mono);
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  tbody td.wrap{white-space:normal;font-family:var(--body-font);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover td{background:var(--surface-2);}
+
+  .chart-group{display:flex;flex-direction:column;gap:10px;}
+  .chart-group h3{font-size:.95rem;}
+  .chart-meta{color:var(--text-dim);font-size:.82rem;}
+
+  /* ---------- joints ---------- */
+  .joint-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+  .joint-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-m);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .joint-card svg{width:100%;height:auto;display:block;}
+  .joint-card h3{font-size:.95rem;}
+  .joint-card p{font-size:.82rem;color:var(--text-dim);}
+  .joint-card .joint-gas{border-top:1px solid var(--border);padding-top:8px;margin-top:2px;font-family:var(--mono);font-size:.74rem;line-height:1.5;}
+  .joint-card .jg-label{font-family:var(--body-font);font-weight:600;color:var(--text);display:block;margin-bottom:2px;}
+  .j-metal{fill:var(--metal-fill);stroke:var(--metal-stroke);stroke-width:1.5;}
+  .j-bead{fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round;}
+  .j-bead-fill{fill:var(--accent);}
+  .j-dim{stroke:var(--text-dim);stroke-width:1;fill:none;}
+
+  .groove-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;}
+  .groove-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-s);padding:10px;text-align:center;}
+  .groove-card svg{width:70px;height:60px;}
+  .groove-card .gname{font-family:var(--display);font-weight:600;font-size:.82rem;margin-top:4px;}
+  .groove-card .guse{font-size:.72rem;color:var(--text-dim);}
+
+  .pos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;}
+  .pos-card{display:flex;gap:10px;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-s);padding:10px;}
+  .pos-icon{flex:0 0 auto;width:46px;height:46px;}
+  .pos-code{font-family:var(--mono);font-weight:600;color:var(--accent);font-size:.85rem;}
+  .pos-name{font-family:var(--display);font-size:.85rem;font-weight:600;}
+  .pos-desc{font-size:.76rem;color:var(--text-dim);}
+
+  /* ---------- glossary ---------- */
+  .glossary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px 22px;}
+  .gterm{display:flex;flex-direction:column;gap:3px;}
+  .gterm dt{font-family:var(--display);font-weight:600;font-size:.88rem;}
+  .gterm dd{margin:0;font-size:.83rem;color:var(--text-dim);}
+
+  .accordion{border:1px solid var(--border);border-radius:var(--radius-s);overflow:hidden;}
+  .accordion details{border-bottom:1px solid var(--border);}
+  .accordion details:last-child{border-bottom:none;}
+  .accordion summary{
+    padding:11px 14px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:.9rem;
+    background:var(--surface-2);
+    list-style:none;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .accordion summary::-webkit-details-marker{display:none;}
+  .accordion summary::after{content:"+";font-family:var(--mono);color:var(--accent);font-weight:700;}
+  .accordion details[open] summary::after{content:"–";}
+  .accordion .panel{padding:12px 14px;font-size:.85rem;color:var(--text-dim);display:flex;flex-direction:column;gap:10px;}
+
+  footer{
+    text-align:center;
+    font-size:.76rem;
+    color:var(--text-dim);
+    padding-top:8px;
+    border-top:1px solid var(--border);
+  }
+
+  /* ---------- process guide ---------- */
+  .process-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+  .process-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--card-accent, var(--accent));border-radius:var(--radius-m);padding:14px;display:flex;flex-direction:column;gap:8px;}
+  .process-card.pc-mig{--card-accent:var(--accent);}
+  .process-card.pc-tig{--card-accent:var(--accent-blue);}
+  .process-card.pc-stick{--card-accent:var(--accent-2);}
+  .process-card.pc-fcaw{--card-accent:var(--accent-teal);}
+  .process-card h3{font-size:1rem;}
+  .process-card .psub{font-family:var(--mono);font-size:.72rem;color:var(--card-accent, var(--accent));text-transform:uppercase;letter-spacing:.05em;}
+  .process-card .phow{font-size:.85rem;color:var(--text-dim);}
+  .process-card .pbestfor{font-size:.82rem;}
+  .process-card .pbestfor b{color:var(--text);}
+  .pc-lists{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;}
+  .pc-list{font-size:.78rem;}
+  .pc-list .lt{font-family:var(--display);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:3px;display:block;}
+  .pc-list.pros .lt{color:var(--good);}
+  .pc-list.cons .lt{color:var(--danger);}
+  .pc-list ul{margin:0;padding-left:16px;color:var(--text-dim);}
+  .pc-gear{font-size:.78rem;color:var(--text-dim);border-top:1px solid var(--border);padding-top:8px;margin-top:2px;}
+  .pc-gear b{color:var(--text);font-weight:600;}
+
+  .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+  .tech-card{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-s);padding:12px;display:flex;flex-direction:column;gap:6px;}
+  .tech-card svg{width:100%;max-width:170px;height:auto;align-self:center;}
+  .tech-card h4{font-size:.85rem;}
+  .tech-card p{font-size:.78rem;color:var(--text-dim);}
+  .j-torch{stroke:var(--accent-2);stroke-width:3;stroke-linecap:round;}
+
+  .proc-tips{display:flex;flex-direction:column;gap:0;}
+  .proc-tip{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--border);flex-wrap:wrap;}
+  .proc-tip:first-child{border-top:none;padding-top:0;}
+  .proc-tip .ptname{font-family:var(--display);font-weight:600;font-size:.85rem;flex:0 0 100px;color:var(--accent);}
+  .proc-tip.pt-mig .ptname{color:var(--accent);}
+  .proc-tip.pt-tig .ptname{color:var(--accent-blue);}
+  .proc-tip.pt-stick .ptname{color:var(--accent-2);}
+  .proc-tip.pt-fcaw .ptname{color:var(--accent-teal);}
+  .proc-tip .ptbody{font-size:.83rem;color:var(--text-dim);flex:1 1 220px;}
+
+  @media (max-width:480px){
+    .brand-mark{font-size:1.55rem;}
+    .readout{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));}
+  }
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">WELD <span>SETTER</span></span></div>
+    <p class="tagline">Settings calculator &amp; shop reference for MIG, TIG, Stick &amp; Flux-Core</p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab-btn" role="tab" data-tab="guide" aria-selected="true">Guide</button>
+    <button class="tab-btn" role="tab" data-tab="calc" aria-selected="false">Calculator</button>
+    <button class="tab-btn" role="tab" data-tab="charts" aria-selected="false">Full Charts</button>
+    <button class="tab-btn" role="tab" data-tab="joints" aria-selected="false">Joints &amp; Positions</button>
+    <button class="tab-btn" role="tab" data-tab="tungsten" aria-selected="false">Tungsten &amp; Filler</button>
+    <button class="tab-btn" role="tab" data-tab="glossary" aria-selected="false">Glossary &amp; Safety</button>
+  </nav>
+
+  <main>
+
+    <!-- ========================= GUIDE ========================= -->
+    <section id="tab-guide" class="tabpanel">
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Start here</span>
+          <h2>Which process should I use?</h2>
+          <p class="sub">Four ways to melt metal together. Pick by material, thickness, environment and how clean the result needs to look.</p>
+        </div>
+        <div class="process-grid" id="processGrid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Fundamentals</span>
+          <h2>Angle, speed &amp; distance</h2>
+          <p class="sub">Every process, every joint, comes down to the same three things held steady: the angle you hold the torch or electrode, how fast you travel, and how far the tip sits from the work. Waver on any one and it shows up in the bead.</p>
+        </div>
+        <div class="tech-grid">
+          <div class="tech-card">
+            <svg viewBox="0 0 160 70"><line class="j-dim" x1="8" y1="55" x2="152" y2="55"/><line class="j-dim" x1="80" y1="55" x2="80" y2="14" stroke-dasharray="3 3"/><line class="j-torch" x1="80" y1="55" x2="58" y2="18"/><line class="j-torch" x1="80" y1="55" x2="102" y2="18"/><polygon class="j-bead-fill" points="138,55 152,55 145,49"/></svg>
+            <h4>Travel angle — push vs. drag</h4>
+            <p>Tilt forward (push, left) for a flatter bead with less penetration; tilt backward (drag, right) for a narrower, deeper bead. Typically 5&ndash;15&deg; off vertical. <strong>If there's slag, you drag</strong> &mdash; stick and self-shielded flux-core always trail the puddle so slag doesn't get trapped underneath. MIG and TIG can go either way.</p>
+          </div>
+          <div class="tech-card">
+            <svg viewBox="0 0 100 80"><rect class="j-metal" x="8" y="56" width="84" height="14"/><rect class="j-metal" x="43" y="16" width="14" height="40"/><line class="j-torch" x1="50" y1="56" x2="18" y2="22"/></svg>
+            <h4>Work angle</h4>
+            <p>The side-to-side tilt, usually bisecting the joint &mdash; roughly 45&deg; on a fillet, straight down the middle on a butt joint &mdash; so heat is split evenly between both pieces instead of favoring one.</p>
+          </div>
+          <div class="tech-card">
+            <svg viewBox="0 0 160 60"><line class="j-dim" x1="10" y1="45" x2="150" y2="45"/><path class="j-bead" d="M40 45 Q60 32 80 45 Q100 32 120 45"/></svg>
+            <h4>Distance &amp; travel speed</h4>
+            <p>Keep stick-out or arc length consistent (roughly the electrode's diameter for stick, 2&ndash;3&times; tungsten diameter for TIG, 3/8&ndash;1/2" contact-tip distance for MIG). Move steadily &mdash; too slow piles up heat and undercut-prone puddles, too fast starves the joint of fusion.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Per-process notes</span>
+          <h2>Quick technique reference</h2>
+        </div>
+        <div class="proc-tips" id="procTips"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">One habit that matters most</span>
+          <h2>Watch the puddle, not the arc</h2>
+        </div>
+        <p style="font-size:.88rem;color:var(--text-dim);">The molten pool tells you more than any settings chart. Watch its back edge, width and how it wets into the joint &mdash; if it's ropey and narrow, you're too cold or moving too fast; if it's flat, wide and washing out the edges, you're too hot or too slow. Use the calculator to get close, then let the puddle do the fine-tuning.</p>
+      </div>
+
+    </section>
+
+    <!-- ========================= CALCULATOR ========================= -->
+    <section id="tab-calc" class="tabpanel" hidden>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Step 1</span>
+          <h2>Process &amp; material</h2>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="processSel">Process</label>
+            <select id="processSel">
+              <option value="mig">MIG (GMAW)</option>
+              <option value="tig">TIG (GTAW)</option>
+              <option value="stick">Stick (SMAW)</option>
+              <option value="fcaw">Flux-Core (FCAW)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="materialSel">Base material</label>
+            <select id="materialSel"></select>
+          </div>
+          <div class="field" id="extraField" hidden>
+            <label for="extraSel" id="extraLabel">Electrode</label>
+            <select id="extraSel"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Step 2</span>
+          <h2>Material thickness</h2>
+        </div>
+        <div class="thickness-row">
+          <div class="field" style="flex:1 1 140px;">
+            <label for="thicknessInput">Thickness</label>
+            <input type="number" id="thicknessInput" min="0" step="0.1" value="3.2">
+          </div>
+          <div class="field" style="flex:0 0 auto;">
+            <label>Unit</label>
+            <div class="segmented" id="unitToggle">
+              <button type="button" data-unit="mm" aria-pressed="true">mm</button>
+              <button type="button" data-unit="in" aria-pressed="false">in</button>
+            </div>
+          </div>
+        </div>
+        <p class="match-tag" id="thicknessAlt"></p>
+        <div class="chips" id="thicknessChips"></div>
+      </div>
+
+      <div class="card" id="resultCard">
+        <div class="card-header">
+          <span class="eyebrow">Recommended settings</span>
+          <h2 id="resultTitle">MIG &middot; Mild Steel</h2>
+          <p class="match-tag" id="resultMatch"></p>
+        </div>
+        <div class="callout warn" id="heavyCallout" hidden style="margin-bottom:12px;"></div>
+        <div class="readout" id="readoutGrid"></div>
+      </div>
+
+    </section>
+
+    <!-- ========================= FULL CHARTS ========================= -->
+    <section id="tab-charts" class="tabpanel" hidden>
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Reference</span>
+          <h2>Complete settings charts</h2>
+          <p class="sub">Every bracket behind the calculator, for when you want to see the whole range at once or cross-check a neighboring thickness. Treat as a starting point &mdash; your machine's door chart and the wire/rod data sheet always win.</p>
+        </div>
+      </div>
+      <div id="chartsContainer" style="display:flex;flex-direction:column;gap:18px;"></div>
+    </section>
+
+    <!-- ========================= JOINTS & POSITIONS ========================= -->
+    <section id="tab-joints" class="tabpanel" hidden>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">The five joints</span>
+          <h2>Joint types</h2>
+          <p class="sub">Every weld joint on earth is a variation on these five. The joint is the geometry; the weld (groove, fillet, etc.) is what fills it.</p>
+        </div>
+        <div class="joint-grid" id="jointGrid"></div>
+        <p class="chart-meta" style="margin-top:12px;">Gas is set by process and material, not the joint shape — the lines above assume mild steel. Swap to a tri-mix for stainless or 100% argon for aluminum, per the full table below.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Every process &amp; material</span>
+          <h2>Shielding gas &amp; flow rate reference</h2>
+          <p class="sub">Whichever joint or weld type you're running, the gas comes from your process and base metal. Full detail (including how TIG flow climbs with thickness) is in Full Charts.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Process</th><th>Material</th><th>Gas</th><th>Flow</th></tr></thead>
+            <tbody id="gasTableJoints"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Butt-joint edge prep</span>
+          <h2>Groove weld types</h2>
+          <p class="sub">How the plate edges are cut before welding, chosen by thickness and access.</p>
+        </div>
+        <div class="groove-grid" id="grooveGrid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Orientation</span>
+          <h2>Weld positions</h2>
+          <p class="sub">Groove welds use a "G" suffix, fillet welds an "F" &mdash; the number describes the same four orientations. Pipe adds 5G/6G for fixed, unrollable joints.</p>
+        </div>
+        <div class="pos-grid" id="posGrid"></div>
+      </div>
+
+    </section>
+
+    <!-- ========================= TUNGSTEN & FILLER ========================= -->
+    <section id="tab-tungsten" class="tabpanel" hidden>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">TIG electrodes</span>
+          <h2>Tungsten color chart</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Color</th><th>Type</th><th>AWS</th><th>Current</th><th class="wrap">Best for</th></tr></thead>
+            <tbody id="tungstenTable"></tbody>
+          </table>
+        </div>
+        <p class="callout warn" style="margin-top:10px;"><span class="label">Note:</span>&nbsp;Thoriated (red) tungsten is mildly radioactive. Most shops now default to ceriated (gray) or lanthanated (blue), which perform similarly without the dust hazard when grinding tips.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Rods &amp; wire</span>
+          <h2>Filler metal selection</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Base metal</th><th>MIG/TIG wire or rod</th><th>Stick electrode</th></tr></thead>
+            <tbody id="fillerTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Shielding</span>
+          <h2>Gas guide</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Process</th><th>Material</th><th>Gas</th><th>Flow</th></tr></thead>
+            <tbody id="gasTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================= GLOSSARY & SAFETY ========================= -->
+    <section id="tab-glossary" class="tabpanel" hidden>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Eye protection</span>
+          <h2>Lens shade chart</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Process</th><th>Amperage</th><th>Shade</th></tr></thead>
+            <tbody id="shadeTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Before you strike an arc</span>
+          <h2>Safety essentials</h2>
+        </div>
+        <div class="accordion" id="safetyAccordion"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Troubleshooting</span>
+          <h2>Common defects &amp; fixes</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Defect</th><th class="wrap">Likely cause</th><th class="wrap">Fix</th></tr></thead>
+            <tbody id="defectTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="eyebrow">Terms of the trade</span>
+          <h2>Glossary</h2>
+        </div>
+        <dl class="glossary-grid" id="glossaryGrid"></dl>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>Reference starting points, not a WPS. Always confirm against your machine's setup chart and the consumable manufacturer's data sheet, and wear proper PPE.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var IN2MM = 25.4;
+
+  /* ============================================================
+     DATA
+     ============================================================ */
+
+  var MIG = {
+    steel: {
+      gas:"75/25 Ar/CO₂ (C25)", flow:"25–35 CFH", polarity:"DCEP (electrode positive)",
+      rows:[
+        {t:0.030, label:'22 ga (0.030")', wire:'.030"', v:"15.9 V", wfs:"95 ipm"},
+        {t:0.048, label:'18 ga (0.048")', wire:'.030"', v:"16.3 V", wfs:"115 ipm"},
+        {t:0.075, label:'14 ga (0.075")', wire:'.030"', v:"17.3 V", wfs:"200 ipm"},
+        {t:0.125, label:'1/8" (0.125")', wire:'.030"', v:"19.0 V", wfs:"290 ipm"},
+        {t:0.188, label:'3/16" (0.188")', wire:'.030"', v:"21.0 V", wfs:"400 ipm"},
+        {t:0.250, label:'1/4" (0.250")', wire:'.030"', v:"24.3 V", wfs:"500 ipm"}
+      ],
+      note:'Baseline is .030" wire. Above 1/4", bevel the joint and run multiple passes, or step up to .035" wire.'
+    },
+    stainless: {
+      gas:"Tri-mix 90He/7.5Ar/2.5CO₂ (or 98/2 Ar/CO₂)", flow:"30–35 CFH", polarity:"DCEP (electrode positive)",
+      rows:[
+        {t:0.048, label:'18 ga (0.048")', wire:'.030"', v:"21.5 V", wfs:"220 ipm"},
+        {t:0.075, label:'14 ga (0.075")', wire:'.030"', v:"22.0 V", wfs:"255 ipm"},
+        {t:0.125, label:'1/8" (0.125")', wire:'.030"', v:"22.5 V", wfs:"290 ipm"}
+      ],
+      note:"Use stainless-only tools and a stainless-only wire brush — stray carbon steel particles will rust through the surface later. Filler: ER308L for 304-series."
+    },
+    aluminum: {
+      gas:"100% Argon", flow:"35–40 CFH", polarity:"DCEP (electrode positive)",
+      rows:[
+        {t:0.063, label:'1/16" (0.063")', wire:'.030"', v:"spray/pulsed", wfs:"500–600 ipm", amps:"100–150 A"},
+        {t:0.125, label:'1/8" (0.125")', wire:'.035"', v:"spray/pulsed", wfs:"480–740 ipm", amps:"85–190 A"},
+        {t:0.188, label:'3/16" (0.188")', wire:"3/64\"", v:"spray/pulsed", wfs:"260–470 ipm", amps:"125–240 A"}
+      ],
+      note:"Needs a spool gun or push-pull setup — aluminum wire is too soft to push through a standard liner. Filler: ER4043 (general purpose, forgiving) or ER5356 (stronger, better color match after anodizing). Push technique, dedicated aluminum-only brush."
+    }
+  };
+
+  var TIG_FERROUS = {
+    polarity:"DCEN (electrode negative)", gas:"100% Argon",
+    rows:[
+      {tMin:0.020, tMax:0.040, amps:"15–50 A", tungsten:'1/16"', filler:'1/16"', cup:"#4–5", flow:"10–15 CFH"},
+      {tMin:0.040, tMax:0.060, amps:"40–80 A", tungsten:'1/16"', filler:'1/16"', cup:"#5–6", flow:"12–18 CFH"},
+      {tMin:0.060, tMax:0.093, amps:"60–110 A", tungsten:'3/32"', filler:'1/16–3/32"', cup:"#6–7", flow:"15–20 CFH"},
+      {tMin:0.093, tMax:0.125, amps:"90–150 A", tungsten:'3/32"', filler:'3/32"', cup:"#7–8", flow:"15–25 CFH"},
+      {tMin:0.125, tMax:0.188, amps:"120–200 A", tungsten:'3/32–1/8"', filler:'3/32–1/8"', cup:"#7–8", flow:"18–28 CFH"},
+      {tMin:0.188, tMax:0.250, amps:"175–275 A", tungsten:'1/8"', filler:'1/8"', cup:"#8–10", flow:"20–30 CFH"},
+      {tMin:0.250, tMax:0.375, amps:"225–350 A", tungsten:'1/8–5/32"', filler:'1/8–3/16"', cup:"#8–12", flow:"25–35 CFH"},
+      {tMin:0.375, tMax:0.500, amps:"300–400 A", tungsten:'5/32"', filler:'3/16"', cup:"#10–12", flow:"28–40 CFH"}
+    ]
+  };
+  var TIG_ALUMINUM = {
+    polarity:"AC (use balance control on an inverter)", gas:"100% Argon",
+    rows:[
+      {tMin:0.040, tMax:0.063, amps:"40–70 A", tungsten:'1/16"', filler:'1/16"', cup:"#5–6", flow:"15–20 CFH"},
+      {tMin:0.063, tMax:0.093, amps:"60–100 A", tungsten:'3/32"', filler:'3/32"', cup:"#6–7", flow:"15–22 CFH"},
+      {tMin:0.093, tMax:0.125, amps:"100–160 A", tungsten:'3/32"', filler:'3/32"', cup:"#7–8", flow:"18–25 CFH"},
+      {tMin:0.125, tMax:0.188, amps:"140–210 A", tungsten:'3/32–1/8"', filler:'3/32–1/8"', cup:"#8–10", flow:"20–28 CFH"},
+      {tMin:0.188, tMax:0.250, amps:"190–300 A", tungsten:'1/8"', filler:'1/8"', cup:"#8–10", flow:"22–32 CFH"},
+      {tMin:0.250, tMax:0.375, amps:"280–400 A", tungsten:'5/32"', filler:'1/8–3/16"', cup:"#10–12", flow:"28–38 CFH"}
+    ]
+  };
+
+  var TIG_MATERIALS = {
+    steel:{ label:"Mild Steel", chart:TIG_FERROUS, filler:"ER70S-2 / ER70S-6", tungsten:"2% Ceriated (gray) or 2% Lanthanated (blue)" },
+    stainless:{ label:"Stainless Steel", chart:TIG_FERROUS, filler:"ER308L", tungsten:"2% Ceriated (gray) or 2% Lanthanated (blue)" },
+    chromoly:{ label:"Chromoly (4130)", chart:TIG_FERROUS, filler:"ER80S-D2", tungsten:"2% Ceriated (gray) or 2% Lanthanated (blue)", extraNote:"Preheat above 9.5 mm (3/8\") and consider stress-relieving critical parts — chromoly hardens fast if it cools too quickly." },
+    aluminum:{ label:"Aluminum", chart:TIG_ALUMINUM, filler:"ER4043 or ER5356", tungsten:"2% Lanthanated (blue) or Ceriated (gray) on an AC-balance inverter; Pure Tungsten (green) on an older transformer AC-only machine" }
+  };
+
+  var STICK_ELECTRODES = {
+    E6010:{ label:"E6010", polarity:"DCEP only", use:"Deep-penetrating root passes, pipe, dirty or painted metal", rows:[
+      {d:'3/32"', amps:"50–85 A"}, {d:'1/8"', amps:"75–135 A"}, {d:'5/32"', amps:"100–175 A"}
+    ]},
+    E6011:{ label:"E6011", polarity:"AC or DCEP", use:"Farm/maintenance repair, AC buzz-box machines, dirty metal", rows:[
+      {d:'3/32"', amps:"40–90 A"}, {d:'1/8"', amps:"65–120 A"}, {d:'5/32"', amps:"80–160 A"}
+    ]},
+    E6013:{ label:"E6013", polarity:"AC, DCEP or DCEN", use:"Clean thin steel, smooth bead, forgiving for beginners", rows:[
+      {d:'3/32"', amps:"70–115 A"}, {d:'1/8"', amps:"100–140 A"}, {d:'5/32"', amps:"145–200 A"}
+    ]},
+    E7018:{ label:"E7018", polarity:"DCEP (AC also works)", use:"Structural, low-hydrogen, highest strength — keep rods dry/in a rod oven", rows:[
+      {d:'3/32"', amps:"80–100 A"}, {d:'1/8"', amps:"90–150 A"}, {d:'5/32"', amps:"110–230 A"}
+    ]},
+    E308L16:{ label:"E308L-16", polarity:"DCEP or AC", use:"304-series stainless steel fabrication", rows:[
+      {d:'3/32"', amps:"40–70 A"}, {d:'1/8"', amps:"60–100 A"}, {d:'5/32"', amps:"90–140 A"}
+    ]}
+  };
+  var STICK_MATERIALS = {
+    steel:{ label:"Mild Steel", electrodes:["E6010","E6011","E6013","E7018"] },
+    stainless:{ label:"Stainless Steel", electrodes:["E308L16"] }
+  };
+
+  var FCAW_SELF = {
+    label:"Self-Shielded (E71T-11)", polarity:"DCEN (electrode negative) — opposite of most other processes", gas:"None — shielded by the flux core itself",
+    rows:[
+      {wire:'.030"', v:"13–19 V", wfs:"50–300 ipm", amps:"30–140 A", ctwd:'1/2"'},
+      {wire:'.035"', v:"14–21 V", wfs:"50–275 ipm", amps:"30–155 A", ctwd:'1/2–5/8"'},
+      {wire:'.045"', v:"15–19 V", wfs:"70–130 ipm", amps:"120–170 A", ctwd:'5/8"'},
+      {wire:'.068"', v:"15–24 V", wfs:"40–175 ipm", amps:"125–300 A", ctwd:'3/4–1 1/4"'}
+    ]
+  };
+
+  var PROCESS_GUIDE = [
+    { key:"mig", name:"MIG", sub:"Gas Metal Arc Welding (GMAW)",
+      how:"A motor feeds a continuous solid wire electrode through the gun while shielding gas flows around it to protect the arc from air.",
+      bestFor:"Beginners, thin-to-medium steel, automotive panels, general fabrication, indoor shop work.",
+      pros:["Fast to learn","Clean, low-spatter welds","High travel speed","One-handed operation"],
+      cons:["Needs shielding gas — no good outdoors in wind","Less portable (bottle + wire spool)","Struggles on thick material without extra passes"],
+      gear:"Wire-feed welder, shielding gas cylinder &amp; regulator, spool of wire" },
+    { key:"tig", name:"TIG", sub:"Gas Tungsten Arc Welding (GTAW)",
+      how:"A non-consumable tungsten electrode holds the arc while you feed a separate filler rod into the puddle by hand — often with a foot pedal controlling amperage at the same time.",
+      bestFor:"Precision work, thin material, stainless &amp; aluminum, exhaust/motorsport/aerospace, anywhere appearance matters.",
+      pros:["Cleanest, most precise welds","Works on almost any weldable metal","Full control over heat input","No spatter, minimal cleanup"],
+      cons:["Slowest process to run","Steepest learning curve","Two hands and a foot pedal at once","Not ideal for thick or dirty material"],
+      gear:"TIG welder (HF-start or lift-arc), tungsten electrodes, filler rod, argon cylinder, foot pedal or torch control" },
+    { key:"stick", name:"Stick", sub:"Shielded Metal Arc Welding (SMAW)",
+      how:"A flux-coated consumable electrode melts into the joint; the coating burns off to shield the arc and leaves a slag layer over the cooling weld.",
+      bestFor:"Outdoor &amp; windy conditions, dirty/rusty/painted metal, thick material, farm/construction/pipeline repair.",
+      pros:["No shielding gas needed — wind doesn't bother it","Cheap, rugged, portable equipment","Handles dirty or thick metal well","Rod choice for almost any job"],
+      cons:["Slag must be chipped off every pass","More spatter and cleanup","Harder to control on thin sheet","Slower than wire processes on long seams"],
+      gear:"Stick welder, electrode holder, work clamp, assorted rods — no gas required" },
+    { key:"fcaw", name:"Flux-Core", sub:"Flux-Cored Arc Welding (FCAW)",
+      how:"Mechanically similar to MIG — a feeder pushes tubular wire packed with flux. Self-shielded wire protects itself; gas-shielded wire also uses external gas like MIG.",
+      bestFor:"Outdoor and windy job sites (self-shielded), thick structural steel, high-deposition production welding.",
+      pros:["High deposition rate — lays down metal fast","Self-shielded version works outdoors/in wind","Deep penetration on thick material"],
+      cons:["More smoke and spatter than MIG","Slag to chip on self-shielded wire","Less cosmetically clean than MIG or TIG"],
+      gear:"Wire-feed welder set to DCEN (self-shielded) or DCEP (gas-shielded), flux-cored wire, gas only if gas-shielded" }
+  ];
+
+  var PROCESS_TIPS = [
+    { key:"mig", name:"MIG", body:"Push (torch leading) for thin sheet or a cosmetic cap pass; drag for thicker material that needs more penetration. Contact-tip-to-work distance 3/8–1/2\". Keep travel steady and watch the leading edge of the puddle." },
+    { key:"tig", name:"TIG", body:"Either push or pull, roughly 15–20° travel angle. Tungsten stick-out about 2–3× its diameter past the cup. Dip the filler rod into the leading edge of the puddle, never into the arc — and never let the tungsten touch the puddle; it contaminates instantly and needs re-grinding." },
+    { key:"stick", name:"Stick", body:"Always drag, 5–15° travel angle, work angle bisecting the joint. Keep arc length close to the electrode's diameter — too long and it sputters and spatters, too short and it sticks. Chip and wire-brush slag before the next pass." },
+    { key:"fcaw", name:"Flux-Core", body:"Always drag, especially self-shielded wire — the flux needs to trail behind and blanket the puddle. Slightly higher stick-out than MIG, about 3/4–1\" for self-shielded wire. Expect more smoke; make sure ventilation is good." }
+  ];
+
+  var TUNGSTEN_ROWS = [
+    {color:"Green", type:"Pure Tungsten", aws:"EWP", current:"AC / DC", use:"Aluminum &amp; magnesium on older transformer AC machines"},
+    {color:"Gray", type:"2% Ceriated", aws:"EWCe-2", current:"AC / DC", use:"General purpose — steel, stainless, aluminum, titanium; excellent on thin, low-amp DC work"},
+    {color:"Blue", type:"2% Lanthanated", aws:"EWLa-2", current:"AC / DC", use:"Most popular all-rounder; strong on both AC and DCEN"},
+    {color:"Gold", type:"1.5% Lanthanated", aws:"EWLa-1.5", current:"AC / DC", use:"Drop-in substitute for 2% thoriated"},
+    {color:"Red", type:"2% Thoriated", aws:"EWTh-2", current:"DC only", use:"Steel, stainless, titanium, nickel — mildly radioactive, ventilate when grinding"},
+    {color:"Brown / White", type:"Zirconiated", aws:"EWZr-1 / EWZr-8", current:"AC only", use:"Aluminum/magnesium where weld purity matters (sheet, aerospace)"},
+    {color:"Gray-purple", type:"Rare-Earth Blend", aws:"EWG", current:"AC / DC", use:"Manufacturer-specific universal blend, non-radioactive"}
+  ];
+
+  var FILLER_ROWS = [
+    {mat:"Mild Steel", wire:"ER70S-6 (MIG/TIG)", stick:"E6011, E6013, E7018"},
+    {mat:"Stainless Steel (304)", wire:"ER308L", stick:"E308L-16"},
+    {mat:"Aluminum", wire:"ER4043 or ER5356", stick:"Not practical — use MIG or TIG"},
+    {mat:"Chromoly (4130)", wire:"ER80S-D2", stick:"E8018-C or similar low-alloy rod"}
+  ];
+
+  var GAS_ROWS = [
+    {proc:"MIG", mat:"Mild Steel", gas:"75/25 Ar/CO₂ (C25)", flow:"25–35 CFH"},
+    {proc:"MIG", mat:"Stainless Steel", gas:"Tri-mix He/Ar/CO₂ or 98/2 Ar/CO₂", flow:"30–35 CFH"},
+    {proc:"MIG", mat:"Aluminum", gas:"100% Argon", flow:"35–40 CFH"},
+    {proc:"TIG", mat:"Steel / Stainless / Chromoly", gas:"100% Argon", flow:"10–40 CFH (by thickness)"},
+    {proc:"TIG", mat:"Aluminum", gas:"100% Argon", flow:"15–38 CFH (by thickness)"},
+    {proc:"Flux-Core", mat:"Self-shielded (E71T-11)", gas:"None required", flow:"—"},
+    {proc:"Flux-Core", mat:"Gas-shielded (E71T-1)", gas:"100% CO₂ or 75/25 Ar/CO₂", flow:"35–40 CFH"}
+  ];
+
+  var SHADE_ROWS = [
+    {proc:"Oxy-fuel cutting / torch brazing", amps:"—", shade:"4–6"},
+    {proc:"TIG (GTAW)", amps:"< 50 A", shade:"8–10"},
+    {proc:"TIG (GTAW)", amps:"50–150 A", shade:"10–12"},
+    {proc:"TIG (GTAW)", amps:"> 150 A", shade:"12–14"},
+    {proc:"MIG (GMAW) / Flux-Core", amps:"< 60 A", shade:"7–10"},
+    {proc:"MIG (GMAW) / Flux-Core", amps:"60–160 A", shade:"10–12"},
+    {proc:"MIG (GMAW) / Flux-Core", amps:"> 160 A", shade:"12–14"},
+    {proc:"Stick (SMAW)", amps:"60–160 A", shade:"10–12"},
+    {proc:"Stick (SMAW)", amps:"> 160 A", shade:"12–14"},
+    {proc:"Plasma cutting", amps:"—", shade:"9–14"}
+  ];
+
+  var DEFECT_ROWS = [
+    {d:"Porosity (pinholes)", c:"Contaminated metal, wind blowing the shielding gas away, gas flow too low or too high, wet/dirty electrode", f:"Clean the base metal, block drafts, check gas flow and hose connections"},
+    {d:"Undercut", c:"Travel speed too fast, voltage or amperage too high, wrong work angle", f:"Slow down, back off the heat slightly, pause at the toes of the weld"},
+    {d:"Overlap", c:"Travel speed too slow, amperage too low", f:"Increase travel speed or amperage, adjust the angle"},
+    {d:"Lack of fusion", c:"Amperage too low, poor technique, dirty or oxidized metal", f:"Increase heat, clean the joint, adjust angle and technique"},
+    {d:"Lack of penetration", c:"Amperage too low, root gap too tight, travel too fast", f:"Increase amps, open the root gap or bevel, slow down"},
+    {d:"Burn-through", c:"Amperage too high for the thickness, travel too slow", f:"Reduce amps/voltage, speed up, or step down to a smaller wire/rod"},
+    {d:"Excessive spatter", c:"Voltage too high or too low, dirty metal, wrong polarity", f:"Tune the voltage, clean the metal, verify polarity"},
+    {d:"Cracking (hot or cold)", c:"Rapid cooling, hydrogen contamination (wet rods), high restraint", f:"Preheat, use dry low-hydrogen rods, control interpass temperature, reduce restraint"},
+    {d:"Warping / distortion", c:"Excess heat input, poor weld sequence, parts left unclamped", f:"Tack strategically, skip-weld pattern, clamp or fixture the parts, reduce heat input"}
+  ];
+
+  var GLOSSARY = [
+    ["Amperage (amps)","The current flowing through the arc — the main heat/penetration control for TIG and stick."],
+    ["Voltage","Sets arc length and bead shape on MIG and flux-core; higher voltage means a longer, wider arc."],
+    ["Wire feed speed (WFS)","How fast MIG/flux-core wire feeds, in inches per minute. On a constant-voltage machine, WFS is what actually sets the amperage."],
+    ["Polarity","DCEP (electrode positive) gives deep penetration — used by MIG, most stick rods, and gas-shielded flux-core. DCEN (electrode negative) runs cooler — used by TIG on steel and self-shielded flux-core. AC alternates and is used by TIG on aluminum."],
+    ["Duty cycle","The percentage of a 10-minute window a machine can weld at a given amperage before it needs to cool."],
+    ["CTWD / stick-out","Contact-tip-to-work distance on a MIG gun, typically 3/8–1/2\"."],
+    ["Arc length","The gap between the electrode and the weld pool, controlled by hand in stick and TIG."],
+    ["Travel speed","How fast the torch or electrode moves along the joint — too slow overheats the joint, too fast starves it of fusion."],
+    ["Heat-affected zone (HAZ)","Base metal next to the weld whose microstructure changed from heat without melting."],
+    ["Penetration","How deeply the weld fuses into the base metal."],
+    ["Weld pool / puddle","The molten metal created by the arc."],
+    ["Tack weld","A small temporary weld that holds parts in position before the final weld."],
+    ["Root / hot / fill / cap pass","The pass sequence on a thick multi-pass weld: root penetrates the joint, hot pass burns out root defects, fill builds thickness, cap is the cosmetic final layer."],
+    ["Stringer vs. weave bead","A stringer is a straight, narrow pass; a weave oscillates side to side for wider coverage on thicker joints."],
+    ["Filler metal","Metal added to the joint as rod or wire — chosen to match or complement the base metal."],
+    ["Shielding gas","Gas that protects the molten pool from the atmosphere on MIG, TIG, and gas-shielded flux-core."],
+    ["Transfer mode","How molten metal moves from a MIG wire to the puddle: short-circuit suits thin/out-of-position work, spray suits thicker flat or horizontal work."],
+    ["Preheat / PWHT","Heating the base metal before, during, or after welding to slow cooling and reduce cracking risk in thick or hardenable steel."],
+    ["WPS","Welding Procedure Specification — a qualified, written recipe of settings and technique required for code work."],
+    ["Work clamp","The clamp that completes the circuit back to the machine — needs clean, direct metal contact close to the weld."]
+  ];
+
+  var SAFETY_SECTIONS = [
+    ["Personal protective equipment", [
+      "Auto-darkening helmet set to the correct shade for your process and amperage (see the chart above).",
+      "Safety glasses underneath the helmet, for grinding and chipping slag.",
+      "Leather welding gloves rated for the process, plus a flame-resistant jacket or sleeves — cotton or leather only, never synthetic fabric, which melts onto skin.",
+      "Closed-toe leather boots and cuffless pants — cuffs catch sparks and hold them against your leg.",
+      "Respirator or fume extraction, especially on galvanized steel (zinc fumes cause metal fume fever), stainless/chromoly (hexavalent chromium), and painted or coated metal.",
+      "Hearing protection when grinding or gouging."
+    ]],
+    ["Fire &amp; area safety", [
+      "Clear a roughly 35 ft radius of flammable material — sparks travel further than you expect.",
+      "Keep a fire extinguisher rated for the materials nearby on hand.",
+      "Watch where sparks and slag fall — through floor gaps, into pockets, onto fuel-soaked rags.",
+      "Use welding screens or blankets to protect bystanders from arc flash.",
+      "Never weld on a sealed container that held fuel or solvent without properly purging it first."
+    ]],
+    ["Electrical safety", [
+      "Inspect cables and leads for damage before every use.",
+      "Keep the work area dry — never weld standing in water or on a wet floor.",
+      "Make sure the work clamp has clean, direct metal contact close to the weld.",
+      "Don't set a hot stick electrode holder down on bare metal or a flammable surface."
+    ]]
+  ];
+
+  var JOINTS = [
+    {name:"Butt Joint", desc:"Two plates meet edge to edge in the same plane. Filled with a groove weld — the most common joint for joining plate and pipe in-line.",
+     gas:"MIG: C25 @ 25–35 CFH &middot; TIG: 100% Argon @ 10–40 CFH (rises with thickness) &middot; Stick / self-shielded FCAW: no gas",
+     svg:'<svg viewBox="0 0 160 90"><rect class="j-metal" x="8" y="34" width="62" height="22"/><rect class="j-metal" x="90" y="34" width="62" height="22"/><path class="j-bead" d="M66 34 Q80 20 94 34"/></svg>'},
+    {name:"Lap Joint", desc:"One plate overlaps another. Filled with fillet welds along the overlapping edge(s) — common where full penetration isn't required.",
+     gas:"MIG: C25 @ 25–35 CFH &middot; TIG: 100% Argon @ 15–30 CFH &middot; Stick / self-shielded FCAW: no gas",
+     svg:'<svg viewBox="0 0 160 90"><rect class="j-metal" x="12" y="24" width="90" height="18"/><rect class="j-metal" x="58" y="46" width="90" height="18"/><path class="j-bead-fill" d="M98 42 L112 42 L98 56 Z"/></svg>'},
+    {name:"Tee Joint", desc:"One plate stands perpendicular on another, forming a T. Filled with fillet welds on one or both sides — the classic bracket and frame joint.",
+     gas:"MIG: C25 @ 25–35 CFH &middot; TIG: 100% Argon @ 15–35 CFH &middot; Stick / self-shielded FCAW: no gas",
+     svg:'<svg viewBox="0 0 160 90"><rect class="j-metal" x="8" y="54" width="144" height="16"/><rect class="j-metal" x="72" y="14" width="16" height="40"/><path class="j-bead-fill" d="M72 54 L60 54 L72 42 Z"/><path class="j-bead-fill" d="M88 54 L100 54 L88 42 Z"/></svg>'},
+    {name:"Corner Joint", desc:"Two plates meet at their edges to form an L or box corner. Common on enclosures, frames and tanks.",
+     gas:"MIG: C25 @ 25–35 CFH &middot; TIG: 100% Argon @ 15–30 CFH &middot; Stick / self-shielded FCAW: no gas",
+     svg:'<svg viewBox="0 0 160 90"><rect class="j-metal" x="16" y="56" width="96" height="16"/><rect class="j-metal" x="96" y="14" width="16" height="58"/><path class="j-bead" d="M100 56 Q92 44 100 32"/></svg>'},
+    {name:"Edge Joint", desc:"Two plate edges are flush and roughly parallel, welded along the mutual edge. Common on formed sheet metal, flanges and tank seams.",
+     gas:"TIG: 100% Argon @ 10–15 CFH &middot; MIG: C25 @ 20–25 CFH (thin gauge) &middot; Stick isn't practical this thin",
+     svg:'<svg viewBox="0 0 160 90"><rect class="j-metal" x="58" y="18" width="18" height="56"/><rect class="j-metal" x="84" y="18" width="18" height="56"/><path class="j-bead" d="M76 22 Q84 10 92 22"/></svg>'}
+  ];
+
+  var GROOVES = [
+    {name:"Square", use:"Thin sheet, ≤ 3/16\"", svg:'<svg viewBox="0 0 70 60"><rect class="j-metal" x="18" y="8" width="14" height="44"/><rect class="j-metal" x="38" y="8" width="14" height="44"/></svg>'},
+    {name:"V-Groove", use:"Medium plate, both sides beveled", svg:'<svg viewBox="0 0 70 60"><path class="j-metal" d="M14 8 L34 40 L34 52 L14 52 Z"/><path class="j-metal" d="M56 8 L36 40 L36 52 L56 52 Z"/></svg>'},
+    {name:"Bevel", use:"One plate flat, one beveled", svg:'<svg viewBox="0 0 70 60"><rect class="j-metal" x="14" y="8" width="20" height="44"/><path class="j-metal" d="M56 8 L36 40 L36 52 L56 52 Z"/></svg>'},
+    {name:"U-Groove", use:"Thick plate, less filler needed", svg:'<svg viewBox="0 0 70 60"><path class="j-metal" d="M14 8 L28 8 Q34 8 34 24 L34 52 L14 52 Z"/><path class="j-metal" d="M56 8 L42 8 Q36 8 36 24 L36 52 L56 52 Z"/></svg>'},
+    {name:"J-Groove", use:"One flat, one radiused edge", svg:'<svg viewBox="0 0 70 60"><rect class="j-metal" x="14" y="8" width="20" height="44"/><path class="j-metal" d="M56 8 L44 8 Q36 8 36 24 L36 52 L56 52 Z"/></svg>'}
+  ];
+
+  var POSITIONS = [
+    {codeG:"1G", codeF:"1F", name:"Flat", desc:"Joint is flat, welded from above — gravity helps, easiest position.", icon:'<svg viewBox="0 0 46 46"><rect class="j-metal" x="6" y="26" width="34" height="10"/></svg>'},
+    {codeG:"2G", codeF:"2F", name:"Horizontal", desc:"Joint runs horizontally, welded from the side.", icon:'<svg viewBox="0 0 46 46"><rect class="j-metal" x="6" y="20" width="10" height="22"/></svg>'},
+    {codeG:"3G", codeF:"3F", name:"Vertical", desc:"Joint runs vertically — welded uphill or downhill.", icon:'<svg viewBox="0 0 46 46"><rect class="j-metal" x="20" y="6" width="10" height="34"/></svg>'},
+    {codeG:"4G", codeF:"4F", name:"Overhead", desc:"Joint is above the welder — gravity fights the puddle, hardest position.", icon:'<svg viewBox="0 0 46 46"><rect class="j-metal" x="6" y="10" width="34" height="10"/></svg>'}
+  ];
+
+  /* ============================================================
+     HELPERS
+     ============================================================ */
+  function toInches(val, unit){ return unit === "mm" ? val / IN2MM : val; }
+  function fmtThickness(inches){
+    return (inches*IN2MM).toFixed(1) + " mm (" + inches.toFixed(3).replace(/0+$/,"").replace(/\.$/,"") + '")';
+  }
+  var MM_MAP = {
+    ".023":0.6, ".030":0.8, ".035":0.9, ".040":1.0, ".045":1.1, ".047":1.2, ".048":1.2, ".052":1.3, ".068":1.7,
+    "1/16":1.6, "3/64":1.2, "3/32":2.4, "1/8":3.2, "5/32":4.0, "3/16":4.8, "1/4":6.4
+  };
+  function withMM(str){
+    if (!str) return str;
+    var s = String(str).replace(/"/g, "");
+    var parts = s.split(/[–-]/);
+    var mms = parts.map(function(p){
+      p = p.trim();
+      return Object.prototype.hasOwnProperty.call(MM_MAP, p) ? MM_MAP[p] : null;
+    });
+    if (mms.indexOf(null) !== -1) return str;
+    var mmStr = mms.length > 1 ? (mms[0] + "–" + mms[mms.length-1] + " mm") : (mms[0] + " mm");
+    return mmStr + " (" + str + ")";
+  }
+  function nearestRow(rows, t){
+    var best = rows[0], bd = Math.abs(rows[0].t - t);
+    for (var i=1;i<rows.length;i++){
+      var d = Math.abs(rows[i].t - t);
+      if (d < bd){ bd = d; best = rows[i]; }
+    }
+    return best;
+  }
+  function bracketRow(rows, t){
+    for (var i=0;i<rows.length;i++){
+      if (t >= rows[i].tMin && t < rows[i].tMax) return rows[i];
+    }
+    return t < rows[0].tMin ? rows[0] : rows[rows.length-1];
+  }
+  function el(tag, cls, html){
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html !== undefined) e.innerHTML = html;
+    return e;
+  }
+  function labelWithMM(row){
+    var m = row.label.match(/^(.*?)\s*\(([^)]+)\)$/);
+    var commonName = m ? m[1] : row.label;
+    var decimalIn = m ? m[2] : row.t.toFixed(3) + '"';
+    return (row.t*IN2MM).toFixed(1) + " mm (" + commonName + " / " + decimalIn + ")";
+  }
+  function bracketWithMM(row){
+    return (row.tMin*IN2MM).toFixed(1) + "–" + (row.tMax*IN2MM).toFixed(1) + ' mm (' + row.tMin.toFixed(3) + "–" + row.tMax.toFixed(3) + '")';
+  }
+  function readoutItem(label, value, small){
+    return '<div class="readout-item"><span class="rl">'+label+'</span><span class="rv">'+value+(small?' <small>'+small+'</small>':'')+'</span></div>';
+  }
+
+  /* ============================================================
+     STATE
+     ============================================================ */
+  var state = { process:"mig", material:"steel", unit:"mm", thickness:0.125, extra:null };
+
+  var MATERIAL_OPTIONS = {
+    mig:[["steel","Mild Steel"],["stainless","Stainless Steel"],["aluminum","Aluminum"]],
+    tig:[["steel","Mild Steel"],["stainless","Stainless Steel"],["aluminum","Aluminum"],["chromoly","Chromoly (4130)"]],
+    stick:[["steel","Mild Steel"],["stainless","Stainless Steel"]],
+    fcaw:[["steel","Mild Steel"]]
+  };
+
+  var processSel = document.getElementById("processSel");
+  var materialSel = document.getElementById("materialSel");
+  var extraField = document.getElementById("extraField");
+  var extraSel = document.getElementById("extraSel");
+  var extraLabel = document.getElementById("extraLabel");
+  var thicknessInput = document.getElementById("thicknessInput");
+  var unitToggle = document.getElementById("unitToggle");
+  var chipsWrap = document.getElementById("thicknessChips");
+
+  function populateMaterials(){
+    materialSel.innerHTML = "";
+    MATERIAL_OPTIONS[state.process].forEach(function(m){
+      var o = document.createElement("option");
+      o.value = m[0]; o.textContent = m[1];
+      materialSel.appendChild(o);
+    });
+    if (!MATERIAL_OPTIONS[state.process].some(function(m){return m[0]===state.material;})){
+      state.material = MATERIAL_OPTIONS[state.process][0][0];
+    }
+    materialSel.value = state.material;
+  }
+
+  function populateExtra(){
+    if (state.process === "stick"){
+      extraField.hidden = false;
+      extraLabel.textContent = "Electrode type";
+      extraSel.innerHTML = "";
+      STICK_MATERIALS[state.material].electrodes.forEach(function(code){
+        var o = document.createElement("option");
+        o.value = code; o.textContent = STICK_ELECTRODES[code].label;
+        extraSel.appendChild(o);
+      });
+      if (!STICK_MATERIALS[state.material].electrodes.includes(state.extra)){
+        state.extra = STICK_MATERIALS[state.material].electrodes[0];
+      }
+      extraSel.value = state.extra;
+    } else if (state.process === "fcaw"){
+      extraField.hidden = false;
+      extraLabel.textContent = "Shielding type";
+      extraSel.innerHTML = '<option value="self">Self-Shielded (E71T-11)</option><option value="gas">Gas-Shielded (E71T-1)</option>';
+      if (state.extra !== "self" && state.extra !== "gas") state.extra = "self";
+      extraSel.value = state.extra;
+    } else {
+      extraField.hidden = true;
+    }
+  }
+
+  var CHIPS_IN = [0.0625, 0.125, 0.1875, 0.25, 0.375, 0.5];
+  var CHIPS_FRAC = {0.0625:"1/16\"", 0.125:"1/8\"", 0.1875:"3/16\"", 0.25:"1/4\"", 0.375:"3/8\"", 0.5:"1/2\""};
+  function renderChips(){
+    chipsWrap.innerHTML = "";
+    CHIPS_IN.forEach(function(t){
+      var label = (t*IN2MM).toFixed(1) + "mm · " + CHIPS_FRAC[t];
+      var c = el("button", "chip", label);
+      c.type = "button";
+      c.addEventListener("click", function(){
+        state.thickness = t;
+        thicknessInput.value = state.unit === "mm" ? (t*IN2MM).toFixed(1) : t;
+        render();
+      });
+      chipsWrap.appendChild(c);
+    });
+  }
+
+  /* ============================================================
+     CALCULATOR RENDER
+     ============================================================ */
+  function computeMIG(){
+    var data = MIG[state.material];
+    var lastRow = data.rows[data.rows.length-1];
+    var title = "MIG · " + materialLabel();
+
+    if (state.thickness > lastRow.t){
+      var big = state.thickness > lastRow.t*2 ? {wire:'.045"', amps:"75–250 A"} : {wire:'.035"', amps:"50–180 A"};
+      var items = [
+        readoutItem("Wire diameter", withMM(big.wire)),
+        readoutItem("Approx. current", big.amps, "rough range"),
+        readoutItem("Voltage / WFS", "Set per pass"),
+        readoutItem("Polarity", data.polarity),
+        readoutItem("Shielding gas", data.gas, data.flow)
+      ];
+      var heavyMsg = "Input thickness is beyond this chart's single-pass range (it tops out around "+labelWithMM(lastRow)+"). Bevel the joint into a V or U groove and plan on many passes — step up to "+withMM(big.wire)+" wire and expect roughly "+big.amps+" depending on the pass. For a joint this heavy, plenty of shops lean on stick, flux-core, or submerged-arc (SAW) rather than running MIG start to finish.";
+      return { title:title, match:"Beyond charted range (max "+labelWithMM(lastRow)+")", items:items, note:data.note, heavy:heavyMsg };
+    }
+
+    var row = nearestRow(data.rows, state.thickness);
+    var items = [
+      readoutItem("Wire diameter", withMM(row.wire)),
+      readoutItem("Voltage", row.v),
+      readoutItem("Wire feed speed", row.wfs)
+    ];
+    if (row.amps) items.push(readoutItem("Approx. current", row.amps));
+    items.push(readoutItem("Polarity", data.polarity));
+    items.push(readoutItem("Shielding gas", data.gas, data.flow));
+    return { title:title, match:"Closest chart entry: "+labelWithMM(row), items:items, note:data.note, heavy:null };
+  }
+
+  function computeTIG(){
+    var mat = TIG_MATERIALS[state.material];
+    var rows = mat.chart.rows;
+    var lastRow = rows[rows.length-1];
+    var row = bracketRow(rows, state.thickness);
+    var title = "TIG · " + mat.label;
+    var items = [
+      readoutItem("Amperage", row.amps),
+      readoutItem("Polarity", mat.chart.polarity),
+      readoutItem("Tungsten", withMM(row.tungsten)),
+      readoutItem("Filler rod", withMM(row.filler), mat.filler),
+      readoutItem("Gas cup", row.cup),
+      readoutItem("Argon flow", row.flow)
+    ];
+    var note = "Tungsten grade: " + mat.tungsten + ". Shielding gas: " + mat.chart.gas + "." + (mat.extraNote ? " " + mat.extraNote : "");
+    var heavy = state.thickness > lastRow.tMax
+      ? "Input thickness is beyond this chart's range (it tops out around "+bracketWithMM(lastRow)+"). TIG this thick almost always means a root pass only, with fill and cap run by stick, flux-core, or submerged-arc — the numbers above are the largest charted bracket, a reasonable starting point for that root pass, not a full procedure."
+      : null;
+    return { title:title, match:"Bracket: "+bracketWithMM(row), items:items, note:note, heavy:heavy };
+  }
+
+  function computeStick(){
+    var code = state.extra;
+    var e = STICK_ELECTRODES[code];
+    var d = state.thickness <= 0.1875 ? '3/32"' : state.thickness <= 0.375 ? '1/8"' : '5/32"';
+    var row = e.rows.filter(function(r){return r.d===d;})[0] || e.rows[0];
+    var title = "Stick · " + materialLabel() + " · " + e.label;
+    var items = [
+      readoutItem("Electrode diameter", withMM(row.d)),
+      readoutItem("Amperage", row.amps),
+      readoutItem("Polarity", e.polarity),
+      readoutItem("Shielding", "None (flux-coated)")
+    ];
+    var note = e.use + (state.thickness < 0.09 ? " Below about 2.4 mm (3/32\"), stick becomes hard to control — MIG or TIG will give a cleaner result." : "");
+    var heavy = state.thickness > 1.0
+      ? "Input thickness will take many passes. Manual stick electrode tops out around "+withMM('5/32"')+" for out-of-position control, even on much thicker plate — bevel the joint and run root/hot/fill/cap passes. Anything this heavy needs a real WPS, not a single settings lookup."
+      : null;
+    return { title:title, match:"Recommended electrode diameter for this thickness: "+withMM(d), items:items, note:note, heavy:heavy };
+  }
+
+  function computeFCAW(){
+    var t = state.thickness;
+    if (state.extra === "self"){
+      var wire = t <= 0.078 ? '.030"' : t <= 0.1875 ? '.035"' : t <= 0.3125 ? '.045"' : '.068"';
+      var row = FCAW_SELF.rows.filter(function(r){return r.wire===wire;})[0];
+      var items = [
+        readoutItem("Wire diameter", withMM(row.wire)),
+        readoutItem("Voltage", row.v),
+        readoutItem("Wire feed speed", row.wfs),
+        readoutItem("Amperage range", row.amps),
+        readoutItem("Polarity", "DCEN"),
+        readoutItem("CTWD", row.ctwd),
+        readoutItem("Shielding", "None")
+      ];
+      var heavy = t > 1.0
+        ? "Input thickness will take many passes. "+withMM('.068"')+" is the largest wire on this chart — bevel the joint and run root/hot/fill/cap passes rather than expecting one pass to fill a joint this heavy."
+        : null;
+      return { title:"Flux-Core · Self-Shielded (E71T-11)", match:"Recommended wire for this thickness: "+withMM(wire), items:items, note:FCAW_SELF.polarity+". Outdoor- and wind-tolerant — the go-to choice for site and farm work.", heavy:heavy };
+    } else {
+      var wire2 = t <= 0.125 ? '.035"' : '.045"';
+      var items2 = [
+        readoutItem("Wire diameter", withMM(wire2)),
+        readoutItem("Polarity", "DCEP"),
+        readoutItem("Shielding gas", "100% CO₂ or 75/25 Ar/CO₂", "35–40 CFH")
+      ];
+      var heavy2 = t > 1.0
+        ? "Input thickness will take many passes. Step up to "+withMM('.045"')+" wire (or larger if your machine supports it), bevel the joint, and plan on root/hot/fill/cap passes."
+        : null;
+      return { title:"Flux-Core · Gas-Shielded (E71T-1)", match:"Recommended wire for this thickness: "+withMM(wire2), items:items2, note:"Gas-shielded flux-core runs close to MIG solid-wire settings for the same wire diameter, typically 1–3 V hotter. Start from your MIG chart for "+wire2+" wire and fine-tune — confirm exact voltage/WFS against the wire's data sheet, since it varies more by brand than self-shielded wire.", heavy:heavy2 };
+    }
+  }
+
+  function materialLabel(){
+    var opts = MATERIAL_OPTIONS[state.process];
+    var found = opts.filter(function(m){return m[0]===state.material;})[0];
+    return found ? found[1] : state.material;
+  }
+
+  function render(){
+    populateMaterials();
+    populateExtra();
+    document.getElementById("resultCard").className = "card proc-" + state.process;
+
+    document.getElementById("thicknessAlt").textContent = state.unit === "mm"
+      ? "= " + state.thickness.toFixed(3).replace(/0+$/,"").replace(/\.$/,"") + '"'
+      : "= " + (state.thickness*IN2MM).toFixed(1) + " mm";
+
+    var result;
+    if (state.process === "mig") result = computeMIG();
+    else if (state.process === "tig") result = computeTIG();
+    else if (state.process === "stick") result = computeStick();
+    else result = computeFCAW();
+
+    document.getElementById("resultTitle").textContent = result.title;
+    document.getElementById("resultMatch").textContent = "Input thickness: " + fmtThickness(state.thickness) + "  —  " + result.match;
+    document.getElementById("readoutGrid").innerHTML = result.items.join("") + '<div class="readout-note">'+result.note+'</div>';
+
+    var warnEl = document.getElementById("heavyCallout");
+    if (result.heavy){
+      warnEl.innerHTML = '<span class="label">Heads up —</span>&nbsp;' + result.heavy;
+      warnEl.hidden = false;
+    } else {
+      warnEl.hidden = true;
+      warnEl.innerHTML = "";
+    }
+  }
+
+  processSel.addEventListener("change", function(){ state.process = processSel.value; state.extra = null; render(); });
+  materialSel.addEventListener("change", function(){ state.material = materialSel.value; render(); });
+  extraSel.addEventListener("change", function(){ state.extra = extraSel.value; render(); });
+  thicknessInput.addEventListener("input", function(){
+    var v = parseFloat(thicknessInput.value);
+    if (!isNaN(v) && v > 0) { state.thickness = toInches(v, state.unit); render(); }
+  });
+  unitToggle.addEventListener("click", function(ev){
+    var btn = ev.target.closest("button[data-unit]");
+    if (!btn) return;
+    Array.prototype.forEach.call(unitToggle.querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", b===btn ? "true":"false"); });
+    state.unit = btn.getAttribute("data-unit");
+    thicknessInput.step = state.unit === "mm" ? "0.1" : "0.005";
+    thicknessInput.value = state.unit === "mm" ? (state.thickness*IN2MM).toFixed(1) : state.thickness;
+    renderChips();
+  });
+
+  /* ============================================================
+     TABS
+     ============================================================ */
+  var tabBtns = document.querySelectorAll(".tab-btn");
+  tabBtns.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      tabBtns.forEach(function(b){ b.setAttribute("aria-selected", b===btn ? "true":"false"); });
+      document.querySelectorAll(".tabpanel").forEach(function(p){ p.hidden = true; });
+      document.getElementById("tab-"+btn.dataset.tab).hidden = false;
+    });
+  });
+
+  /* ============================================================
+     CHARTS TAB
+     ============================================================ */
+  function buildMigTable(materialKey, materialName){
+    var d = MIG[materialKey];
+    var hasAmps = d.rows.some(function(r){return r.amps;});
+    var head = "<tr><th>Thickness</th><th>Wire</th><th>Voltage</th><th>WFS</th>"+(hasAmps?"<th>Amperage</th>":"")+"</tr>";
+    var body = d.rows.map(function(r){
+      return "<tr><td>"+labelWithMM(r)+"</td><td>"+withMM(r.wire)+"</td><td>"+r.v+"</td><td>"+r.wfs+"</td>"+(hasAmps?"<td>"+(r.amps||"—")+"</td>":"")+"</tr>";
+    }).join("");
+    return '<div class="chart-group"><h3>MIG — '+materialName+'</h3><p class="chart-meta">Gas: '+d.gas+' &middot; Flow: '+d.flow+' &middot; Polarity: '+d.polarity+'</p><div class="table-wrap"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div></div>';
+  }
+  function buildTigTable(mat){
+    var head = "<tr><th>Thickness</th><th>Amperage</th><th>Tungsten</th><th>Filler</th><th>Cup</th><th>Flow</th></tr>";
+    var body = mat.chart.rows.map(function(r){
+      return "<tr><td>"+bracketWithMM(r)+"</td><td>"+r.amps+"</td><td>"+withMM(r.tungsten)+"</td><td>"+withMM(r.filler)+"</td><td>"+r.cup+"</td><td>"+r.flow+"</td></tr>";
+    }).join("");
+    return '<div class="chart-group"><h3>TIG — '+mat.label+'</h3><p class="chart-meta">Polarity: '+mat.chart.polarity+' &middot; Gas: '+mat.chart.gas+' &middot; Tungsten grade: '+mat.tungsten+'</p><div class="table-wrap"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div></div>';
+  }
+  function buildStickTable(code){
+    var e = STICK_ELECTRODES[code];
+    var head = "<tr><th>Diameter</th><th>Amperage</th></tr>";
+    var body = e.rows.map(function(r){ return "<tr><td>"+withMM(r.d)+"</td><td>"+r.amps+"</td></tr>"; }).join("");
+    return '<div class="chart-group"><h3>Stick — '+e.label+'</h3><p class="chart-meta">Polarity: '+e.polarity+' &middot; '+e.use+'</p><div class="table-wrap"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div></div>';
+  }
+  function buildFcawTable(){
+    var head = "<tr><th>Wire</th><th>Voltage</th><th>WFS</th><th>Amperage</th><th>CTWD</th></tr>";
+    var body = FCAW_SELF.rows.map(function(r){
+      return "<tr><td>"+withMM(r.wire)+"</td><td>"+r.v+"</td><td>"+r.wfs+"</td><td>"+r.amps+"</td><td>"+r.ctwd+"</td></tr>";
+    }).join("");
+    return '<div class="chart-group"><h3>Flux-Core — Self-Shielded (E71T-11)</h3><p class="chart-meta">Polarity: '+FCAW_SELF.polarity+'</p><div class="table-wrap"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div><p class="chart-meta">Gas-shielded E71T-1: DCEP, 100% CO₂ or 75/25 Ar/CO₂ at 35–40 CFH. Runs close to MIG solid-wire settings for the same wire diameter, roughly 1–3 V hotter — confirm against the wire’s data sheet.</p></div>';
+  }
+
+  var chartsContainer = document.getElementById("chartsContainer");
+  chartsContainer.innerHTML =
+    buildMigTable("steel","Mild Steel") +
+    buildMigTable("stainless","Stainless Steel") +
+    buildMigTable("aluminum","Aluminum") +
+    buildTigTable(TIG_MATERIALS.steel) +
+    buildTigTable(TIG_MATERIALS.stainless) +
+    buildTigTable(TIG_MATERIALS.aluminum) +
+    buildTigTable(TIG_MATERIALS.chromoly) +
+    buildStickTable("E6010") + buildStickTable("E6011") + buildStickTable("E6013") + buildStickTable("E7018") + buildStickTable("E308L16") +
+    buildFcawTable();
+
+  /* ============================================================
+     JOINTS TAB
+     ============================================================ */
+  document.getElementById("jointGrid").innerHTML = JOINTS.map(function(j){
+    return '<div class="joint-card">'+j.svg+'<h3>'+j.name+'</h3><p>'+j.desc+'</p><p class="joint-gas"><span class="jg-label">Shielding (mild steel):</span> '+j.gas+'</p></div>';
+  }).join("");
+
+  document.getElementById("grooveGrid").innerHTML = GROOVES.map(function(g){
+    return '<div class="groove-card">'+g.svg+'<div class="gname">'+g.name+'</div><div class="guse">'+g.use+'</div></div>';
+  }).join("");
+
+  document.getElementById("posGrid").innerHTML = POSITIONS.map(function(p){
+    return '<div class="pos-card"><div class="pos-icon">'+p.icon+'</div><div><div class="pos-code">'+p.codeG+' / '+p.codeF+'</div><div class="pos-name">'+p.name+'</div><div class="pos-desc">'+p.desc+'</div></div></div>';
+  }).join("") + '<p class="chart-meta" style="grid-column:1/-1;">Pipe welding adds 5G/6G (fixed pipe, cannot be rolled) and 2G/6G variants — the joint stays still and the welder moves around it.</p>';
+
+  /* ============================================================
+     GUIDE TAB
+     ============================================================ */
+  document.getElementById("processGrid").innerHTML = PROCESS_GUIDE.map(function(p){
+    return '<div class="process-card pc-'+p.key+'"><h3>'+p.name+'</h3><span class="psub">'+p.sub+'</span>'+
+      '<p class="phow">'+p.how+'</p>'+
+      '<p class="pbestfor"><b>Best for:</b> '+p.bestFor+'</p>'+
+      '<div class="pc-lists"><div class="pc-list pros"><span class="lt">Pros</span><ul>'+p.pros.map(function(x){return "<li>"+x+"</li>";}).join("")+'</ul></div>'+
+      '<div class="pc-list cons"><span class="lt">Cons</span><ul>'+p.cons.map(function(x){return "<li>"+x+"</li>";}).join("")+'</ul></div></div>'+
+      '<p class="pc-gear"><b>You\'ll need:</b> '+p.gear+'</p></div>';
+  }).join("");
+
+  document.getElementById("procTips").innerHTML = PROCESS_TIPS.map(function(t){
+    return '<div class="proc-tip pt-'+t.key+'"><span class="ptname">'+t.name+'</span><span class="ptbody">'+t.body+'</span></div>';
+  }).join("");
+
+  /* ============================================================
+     TUNGSTEN / FILLER / GAS TABS
+     ============================================================ */
+  document.getElementById("tungstenTable").innerHTML = TUNGSTEN_ROWS.map(function(r){
+    return "<tr><td>"+r.color+"</td><td>"+r.type+"</td><td>"+r.aws+"</td><td>"+r.current+"</td><td class=\"wrap\">"+r.use+"</td></tr>";
+  }).join("");
+
+  document.getElementById("fillerTable").innerHTML = FILLER_ROWS.map(function(r){
+    return "<tr><td class=\"wrap\">"+r.mat+"</td><td>"+r.wire+"</td><td>"+r.stick+"</td></tr>";
+  }).join("");
+
+  var gasRowsHtml = GAS_ROWS.map(function(r){
+    return "<tr><td>"+r.proc+"</td><td class=\"wrap\">"+r.mat+"</td><td class=\"wrap\">"+r.gas+"</td><td>"+r.flow+"</td></tr>";
+  }).join("");
+  document.getElementById("gasTable").innerHTML = gasRowsHtml;
+  document.getElementById("gasTableJoints").innerHTML = gasRowsHtml;
+
+  /* ============================================================
+     GLOSSARY / SAFETY TAB
+     ============================================================ */
+  document.getElementById("shadeTable").innerHTML = SHADE_ROWS.map(function(r){
+    return "<tr><td class=\"wrap\">"+r.proc+"</td><td>"+r.amps+"</td><td>"+r.shade+"</td></tr>";
+  }).join("");
+
+  document.getElementById("safetyAccordion").innerHTML = SAFETY_SECTIONS.map(function(s, i){
+    var items = s[1].map(function(li){ return "<p>• "+li+"</p>"; }).join("");
+    return '<details'+(i===0?" open":"")+'><summary>'+s[0]+'</summary><div class="panel">'+items+'</div></details>';
+  }).join("");
+
+  document.getElementById("defectTable").innerHTML = DEFECT_ROWS.map(function(r){
+    return "<tr><td class=\"wrap\">"+r.d+"</td><td class=\"wrap\">"+r.c+"</td><td class=\"wrap\">"+r.f+"</td></tr>";
+  }).join("");
+
+  document.getElementById("glossaryGrid").innerHTML = GLOSSARY.map(function(g){
+    return "<div class=\"gterm\"><dt>"+g[0]+"</dt><dd>"+g[1]+"</dd></div>";
+  }).join("");
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  renderChips();
+  render();
+})();
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>
